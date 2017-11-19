@@ -299,7 +299,7 @@ function lectio(res,amount,type,school,person){
                 l.els = l.els + $(".s2bgbox")["length"];
                 $(".s2bgbox").each(function(i,item){
                     var promise = new Promise(function(resolve,reject){
-                        l.processEvent(item.attribs.title,function(output){
+                        l.processEvent(item.attribs["data-additionalinfo"],function(output){
                             resolve(output);
                         });
                     });
