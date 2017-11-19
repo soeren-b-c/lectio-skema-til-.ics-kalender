@@ -339,4 +339,4 @@ function cron(interval){
     runAnalytics();
     setTimeout(function(){cron(interval);}, interval*1000);
 }
-cron(3600);
+//cron(3600);
