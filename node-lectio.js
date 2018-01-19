@@ -336,23 +336,27 @@ function lectio(res, amount, type, school, person) {
 				});
 			});
 
-			promise.then(function(body) {
-				var cheerio = require('cheerio');
-				$ = cheerio.load(body);
-				l.els = l.els + $('.s2bgbox')['length'];
-				$('.s2bgbox').each(function(i, item) {
-					var promise = new Promise(function(resolve, reject) {
-						l.processEvent(item.attribs['data-additionalinfo'], function(
-							output
-						) {
-							resolve(output);
+			promise
+				.then(function(body) {
+					var cheerio = require('cheerio');
+					$ = cheerio.load(body);
+					l.els = l.els + $('.s2bgbox')['length'];
+					$('.s2bgbox').each(function(i, item) {
+						var promise = new Promise(function(resolve, reject) {
+							l.processEvent(item.attribs['data-additionalinfo'], function(
+								output
+							) {
+								resolve(output);
+							});
+						});
+						promise.then(function(output) {
+							l.res.write(output);
 						});
 					});
-					promise.then(function(output) {
-						l.res.write(output);
-					});
+				})
+				.catch(function(error) {
+					console.log(error.message);
 				});
-			});
 
 			promises.push(promise);
 		}
@@ -362,7 +366,7 @@ function lectio(res, amount, type, school, person) {
 				l.finishedProcessing();
 			})
 			.catch(function(error) {
-				console.log(error);
+				console.log(error.message);
 			});
 	};
 }
