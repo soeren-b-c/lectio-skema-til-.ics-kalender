@@ -7,5 +7,7 @@ exports.read = function(name){
 };
 exports.write = function(name,value,callback){
 	cache[name] = value;
-	return fs.writeFile(file, JSON.stringify(cache), "utf8", callback);
+	return fs.writeFile(file, JSON.stringify(cache), "utf8", (err) => {
+          if (err) throw err;
+        });
 };
