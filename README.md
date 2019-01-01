@@ -8,7 +8,7 @@ Hent nyeste udgave fra <https://nodejs.org/en/download/>
 2. Installer html-entities og cheerio  
 ```npm install html-entities cheerio```
 3. Hent filerne, pak ud, naviger til den udpakkede mappe
-```wget https://github.com/emmikkelsen/node-lectio-til-ics/archive/master.zip```  
+```wget https://github.com/soeren-b-c/node-lectio-til-ics/archive/master.zip```  
 ```unzip master.zip```  
 ```cd node-lectio-til-ics-master```  
 4. Skift CONTROL_PASSWORD i node-lectio.js filen. Følg vejledningn i den fil til at konfigurere tor med det nye control password.
