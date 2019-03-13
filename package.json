@@ -1,19 +1,30 @@
 {
   "name": "node-lectio",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Lectio calendar to .ics converter",
   "main": "node-lectio.js",
   "scripts": {
+    "dev": "NODE_ENV=development nodemon",
+    "start": "NODE_ENV=production node -r reify node-lectio.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Emil Bach Mikkelsen",
+  "contributors": [
+    "Scott Mathieson <scttmthsn@gmail.com>"
+  ],
   "license": "ISC",
   "dependencies": {
-    "cheerio": "^0.19.0",
-    "html-entities": "^1.1.2",
-    "tor-request": "1.0.6"
+    "cheerio": "0.22.0",
+    "dotenv": "6.2.0",
+    "html-entities": "1.1.2",
+    "puppeteer": "1.13.0",
+    "reify": "0.18.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-eslint": "10.0.1",
+    "eslint": "5.15.1",
+    "nodemon": "1.18.10"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/emmikkelsen/node-lectio-til-ics.git"
