@@ -1,28 +1,4 @@
-//
-// Tested with Node.JS 6.x, 8.x, 9.x
-//
-
-var CONTROL_PASSWORD = 'tornodo';
-
-/*
-Requires tor to be installed and configured as follows:
-
-Choose a CONTROL_PASSWORD, and generate the password hash
-
-tor --hash-password <CONTROL_PASSWORD>
-
-Add hashed password to /etc/tor/torrc (path may differ)
-
-HashedControlPassword <PASSWORD_HASH>
-
-Uncomment the following 2 lines in torrc
-
-ControlPort 9051
-CookieAuthentication 1
-
-Start/Restart Tor
-
-*/
+/* eslint-disable no-console */
 
 var http = require('http');
 var url = require('url');
@@ -32,8 +8,7 @@ var entities = new Entities();
 var lectioHelper = require('./lectio-helper');
 var httpTools = require('./http-tools');
 
-var tor = require('tor-request');
-tor.TorControlPort.password = CONTROL_PASSWORD;
+var browser = require('./browser');
 
 var server = http.createServer(function (req, res) {
   if (url.parse(req.url).query != null) {
@@ -65,7 +40,7 @@ var server = http.createServer(function (req, res) {
         'content-type': 'text/json; charset=utf-8',
       });
       this.sequence++;
-      lec = new lectio(res, amount, type, school, person);
+      var lec = new lectio(res, amount, type, school, person);
       lec.generate(res);
     }
     else {
@@ -101,7 +76,7 @@ function lectio (res, amount, type, school, person) {
     var min = Math.floor(now.getMinutes() / 15) * 15;
   }
   now.setUTCMinutes(min);
-  now.setUTCSeconds(00);
+  now.setUTCSeconds(0);
   this.lastTime = lectioHelper.dateFormat(now, 0);
 
   this.beginOutput = function () {
@@ -353,11 +328,7 @@ function lectio (res, amount, type, school, person) {
 
       var url = base + result;
 
-      var promise = new Promise(function (resolve, reject) {
-        tor.request(url, function (error, response, body) {
-          error ? reject(error) : resolve(body);
-        });
-      });
+      var promise = browser.fetch(url);
 
       promise
         .then(function (body) {
