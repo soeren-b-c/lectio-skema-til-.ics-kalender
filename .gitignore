@@ -1,2 +1,4 @@
+.env
 
+.reify-cache
 node_modules/*
