@@ -1,19 +1,13 @@
 // Copyright ©2019 Scott Mathieson <scttmthsn@gmail.com>
 
-/* eslint-disable no-console */
-
 process.setMaxListeners(128);
-
-import { exec as _exec, spawn } from 'child_process';
-import { promisify } from 'util';
 
 import dotenv from 'dotenv';
 import puppeteer from 'puppeteer';
 
 import tor from './tor-proxy';
 
-const exec = promisify(_exec);
-const { env, exit, stderr, stdout } = process;
+const { env, stderr, stdout } = process;
 
 // See ./.env
 dotenv.config();
