@@ -11,18 +11,21 @@ const exec = promisify(_exec);
 // See ./.env
 dotenv.config();
 
-export default (async () => {
+const create = async () => {
   if (env.TOR_ENABLED === 'true') {
     try {
       await exec('which tor');
-      await spawn('tor').on('error', (error) => {
-        stderr.write(`Failed to start TOR proxy; exiting.\n`);
-        exit(1);
-      });
-      stdout.write(`TOR proxy started.\n`);
+
+      const proxy = await spawn('tor');
+
+      stdout.write(`TOR proxy started with PID ${proxy.pid}.\n`);
+
+      return proxy;
     } catch (error) {
       stderr.write(`The TOR binary must be in your PATH; exiting.\n`);
       exit(1);
     }
   }
-})();
+};
+
+export { create };
