@@ -33,9 +33,9 @@ cp sample.env .env
 ```
 npm start
 ```
-5. Besøg web-adressen <http://localhost:9002/?laerer=LÆRER-ID&uger=2&type=laerer&skole=SKOLE-ID> hvis du er lærer, eller <http://localhost:9002/?skole=SKOLE-ID&elev=ELEV-ID> hvis du er elev, og erstatter SKOLE-ID og LÆRER-ID / ELEV-ID med dine egne værdier.
+8. Besøg web-adressen <http://localhost:9002/?laerer=LÆRER-ID&uger=2&type=laerer&skole=SKOLE-ID> hvis du er lærer, eller <http://localhost:9002/?skole=SKOLE-ID&elev=ELEV-ID> hvis du er elev, og erstatter SKOLE-ID og LÆRER-ID / ELEV-ID med dine egne værdier.
 Du får nu genereret en .ics kalender-fil med dit skema.
-6. **ALLE SKEMAER FOR ALLE ELEVER OG LÆRERE PÅ DIN SKOLE ER NU TILGÆNGELIGE**, hvis din computer er tilgængelig udefra på port 9002.
+9. **ALLE SKEMAER FOR ALLE ELEVER OG LÆRERE PÅ DIN SKOLE ER NU TILGÆNGELIGE**, hvis din computer er tilgængelig udefra på port 9002.
 Det er du (med tanke på [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation)) nok ikke interesseret i. Der er en grund til at Lectio skjuler skemaerne bag et login.
 Det er **måske en god ide at begrænse adgang udefra**. Brug f.eks. *ufw* til det.
 ```
@@ -65,7 +65,7 @@ og den adresse kan du så importere i Google Calendar under "Add by url" eller l
 
 ### Mulighed 2, direkte adgang til port 9002
 
-Hvis du ikke har nogen skrubler ved potentielt at gøre kalender for ALLE ELEVER OG LÆRERE PÅ DIN SKOLE OFFENTLIGT TILGÆNGELIGE, så indsæt din faste ip-adresse eller domænenavn i adressen i stedet for localhost, og tilføj til Google Calendar under "Add by url":
+Hvis du ikke har nogen skrubler ved potentielt at gøre kalender for **ALLE ELEVER OG LÆRERE PÅ DIN SKOLE OFFENTLIGT TILGÆNGELIGE**, så indsæt din faste ip-adresse eller domænenavn i adressen i stedet for localhost, og tilføj til Google Calendar under "Add by url":
 
 Lærer: <http://DIN-IP-ADRESSE-ELLER-DOMÆNENAVN-HER:9002/?laerer=LÆRER-ID&uger=2&type=laerer&skole=SKOLE-ID>
 
