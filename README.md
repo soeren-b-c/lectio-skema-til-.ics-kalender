@@ -15,9 +15,12 @@ Hent nyeste udgave fra <https://nodejs.org/en/download/>
 ```
 wget https://github.com/soeren-b-c/node-lectio-til-ics/archive/master.zip
 unzip master.zip
-cd node-lectio-til-ics-master```
+cd node-lectio-til-ics-master
+```
 3. Installer nødvendige pakker
-```npm install```
+```
+npm install
+```
 4. Find dit SKOLE-ID og LÆRER-ID / ELEV-ID  i adressefeltet i dit personlige Lectio-skema.
 Eksempel lærer: https://www.lectio.dk/lectio/SKOLE-ID/SkemaNy.aspx?type=laerer&laererid=LÆRER-ID
 Eksempel elev: https://www.lectio.dk/lectio/SKOLE-ID/SkemaNy.aspx?type=elev&elevid=ELEV-ID
@@ -27,13 +30,17 @@ Eksempel elev: https://www.lectio.dk/lectio/SKOLE-ID/SkemaNy.aspx?type=elev&elev
 cp sample.env .env
 ```
 7. Start programmet
-```npm start```
+```
+npm start
+```
 5. Besøg web-adressen <http://localhost:9002/?laerer=LÆRER-ID&uger=2&type=laerer&skole=SKOLE-ID> hvis du er lærer, eller <http://localhost:9002/?skole=SKOLE-ID&elev=ELEV-ID> hvis du er elev, og erstatter SKOLE-ID og LÆRER-ID / ELEV-ID med dine egne værdier.
 Du får nu genereret en .ics kalender-fil med dit skema.
 6. **ALLE SKEMAER FOR ALLE ELEVER OG LÆRERE PÅ DIN SKOLE ER NU TILGÆNGELIGE**, hvis din computer er tilgængelig udefra på port 9002.
 Det er du (med tanke på [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation)) nok ikke interesseret i. Der er en grund til at Lectio skjuler skemaerne bag et login.
 Det er **måske en god ide at begrænse adgang udefra**. Brug f.eks. *ufw* til det.
-```man ufw```
+```
+man ufw
+```
 
 ## Daglig brug
 
