@@ -1,0 +1,30 @@
+# Daglig brug
+
+Hvis du er kommet igennem installationsguiden i [../README.md] kan du nu hente dit skema på enten
+<http://localhost:9002/?laerer=LÆRER-ID&uger=2&type=laerer&skole=SKOLE-ID> eller <http://localhost:9002/?skole=SKOLE-ID&elev=ELEV-ID>.
+
+Du kan enten manuelt gemme den genererede .ics fil og efterfølgende uploade til Google Calendar, Outlook eller tilsvarende. Hvis (når) det bliver trættende i længden er der flere andre muligheder. Begge antager at du har en computer tændt 24 timer i døgnet og at den er tilgængelig udefra, enten med en webserver, eller på port 9002.
+
+
+## Mulighed 1, Webserver (ANBEFALES)
+
+Hvis du har en installeret webserver kan du med et chron-job hente kalenderen ned et par gange i døgnet med et script i stil med dette
+```
+cd /var/www/html/SECRET-PATH
+wget "http://127.0.0.1:9002/?laerer=LÆRER-ID&uger=11&type=laerer&skole=SKOLE-ID" -O kalender.ics
+```
+Så burde din kalender være tilgængelig på en adresse noget i retning af
+```
+http://DIN-IP-ADRESSE-ELLER-DOMÆNENAVN-HER/SECRET-PATH/kalender.ics
+```
+og den adresse kan du så importere i Google Calendar under "Add by url" eller lignende.
+
+
+## Mulighed 2, direkte adgang til port 9002 (ANBEFALES IKKE)!
+
+Hvis du ikke har nogen skrubler ved potentielt at gøre kalender for **ALLE ELEVER OG LÆRERE PÅ DIN SKOLE OFFENTLIGT TILGÆNGELIGE**, så indsæt din faste ip-adresse eller domænenavn i adressen i stedet for localhost, og tilføj til Google Calendar under "Add by url":
+
+Lærer: <http://DIN-IP-ADRESSE-ELLER-DOMÆNENAVN-HER:9002/?laerer=LÆRER-ID&uger=2&type=laerer&skole=SKOLE-ID>
+
+Elev: <http://DIN-IP-ADRESSE-ELLER-DOMÆNENAVN-HER:9002/?skole=SKOLE-ID&elev=ELEV-ID>
+
