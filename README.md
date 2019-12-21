@@ -10,8 +10,7 @@ Spørgsmål, kommentarer, pull requests osv. meget velkomne!
 
 Det antages at der installeres på en Ubuntu / Linux-lignende platform.
 
-1. Installer Node.js
-Hent nyeste udgave fra <https://nodejs.org/en/download/>
+1. Installer Node.js. Hent nyeste udgave fra <https://nodejs.org/en/download/>
 2. Hent filerne, pak ud, naviger til den udpakkede mappe
 ```
 wget https://github.com/soeren-b-c/node-lectio-til-ics/archive/master.zip
@@ -21,6 +20,7 @@ cd node-lectio-til-ics-master
 3. Installer nødvendige pakker
 ```
 npm install
+npm fix audit
 ```
 4. Find dit SKOLE-ID og LÆRER-ID / ELEV-ID  i adressefeltet i dit personlige Lectio-skema.
 Eksempel lærer: https://www.lectio.dk/lectio/SKOLE-ID/SkemaNy.aspx?type=laerer&laererid=LÆRER-ID
@@ -41,25 +41,10 @@ Det er du (med tanke på [GDPR](https://en.wikipedia.org/wiki/General_Data_Prote
 Det er **måske en god ide at begrænse adgang udefra**. Brug f.eks. *ufw* til det.
 ```
 man ufw
+sudo ufw deny 9002
 ```
 
 Se [Setup.md](docs/setup.md) for forslag til setup og daglig brug.
-
-
-## Tor
-
-Hvis du gerne vil at porgrammet henter skemaet gennem [Tor](https://www.torproject.org/) så er det muligt. (Hvis du ikke er sikker på hvad det betyder har du nok ikke brug for det...)
-
-1. Installer tor.
-```
-apt install tor
-```
-eller se [Option two: Tor on Ubuntu or Debian](https://www.torproject.org/docs/debian.html.en#ubuntu)
-2. I filen `.env` ret til
-```
-TOR_ENABLED=true
-```
-
 
 # Licens
 
