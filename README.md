@@ -25,11 +25,11 @@ npm fix audit
 4. Find dit SKOLE-ID og LÆRER-ID / ELEV-ID  i adressefeltet i dit personlige Lectio-skema.
 Eksempel lærer: https://www.lectio.dk/lectio/SKOLE-ID/SkemaNy.aspx?type=laerer&laererid=LÆRER-ID
 Eksempel elev: https://www.lectio.dk/lectio/SKOLE-ID/SkemaNy.aspx?type=elev&elevid=ELEV-ID
-5. Rediger filen `sample.env`, og tilret med dit SKOLE-ID, og angiv dit brugernavn og kodeord.
-6. Kopier den tilrettede `sample.env` til `.env`
+5. Kopier filen `sample.env` til `.env`
 ```
 cp sample.env .env
 ```
+6. Rediger filen `.env`, og tilret med dit SKOLE-ID, og angiv dit brugernavn og kodeord.
 7. Start programmet
 ```
 npm start
@@ -44,12 +44,16 @@ man ufw
 sudo ufw deny 9002
 ```
 
-Se [Setup.md](docs/setup.md) for forslag til setup og daglig brug.
+Se [setup.md](docs/setup.md) for forslag til setup og daglig brug.
 
 # Licens
 
-Programmet er oprindeligt skrevet af Emil Bach Mikkelsen og udgivet under ISC licensen. Yderligere bidrag af Scott Mathieson.
+Programmet er oprindeligt skrevet af Emil Bach Mikkelsen og udgivet under ISC licensen.
+
 Emils oprindelige kode kan findes her: [https://github.com/emmikkelsen/node-lectio-til-ics](https://github.com/emmikkelsen/node-lectio-til-ics)
+
+Yderligere bidrag af Scott Mathieson.
+
 Programmet kan hentes her: [https://github.com/soeren-b-c/node-lectio-til-ics/](https://github.com/soeren-b-c/node-lectio-til-ics/)
   
 # Links
