@@ -20,7 +20,7 @@ cd node-lectio-til-ics-master
 3. Installer nødvendige pakker
 ```
 npm install
-npm fix audit
+npm audit fix
 ```
 4. Find dit SKOLE-ID og LÆRER-ID / ELEV-ID  i adressefeltet i dit personlige Lectio-skema.
 Eksempel lærer: https://www.lectio.dk/lectio/SKOLE-ID/SkemaNy.aspx?type=laerer&laererid=LÆRER-ID
