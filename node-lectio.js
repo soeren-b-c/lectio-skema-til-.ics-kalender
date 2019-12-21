@@ -82,7 +82,7 @@ function lectio (res, amount, type, school, person) {
   this.beginOutput = function () {
     begin = 'BEGIN:VCALENDAR\r\n';
     begin += 'VERSION:2.0\r\n';
-    begin += 'PRODID:-//EMILBA.CH//LECTIO//DA\r\n';
+    begin += 'PRODID:-//skema.click//Lectio//DA\r\n';
     begin += 'CALSCALE:GREGORIAN\r\n';
     begin += 'METHOD:PUBLISH\r\n';
     begin += 'X-PUBLISHED-TTL:PT15M\r\n';
@@ -262,7 +262,7 @@ function lectio (res, amount, type, school, person) {
         .createHash('md5')
         .update(teacher + start + end)
         .digest('hex') +
-      '@emilba.ch' +
+      '@skema.click' +
       '\r\n';
     o += 'SEQUENCE:' + server.sequence + '\r\n'; //This is important, to push updates
     if (cancelled === true) o += 'STATUS:CANCELLED' + '\r\n';

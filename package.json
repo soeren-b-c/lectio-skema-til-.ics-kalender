@@ -27,10 +27,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/emmikkelsen/node-lectio-til-ics.git"
+    "url": "git+https://github.com/soeren-b-c/lectio-skema-til-.ics-kalender.git"
   },
   "bugs": {
-    "url": "https://github.com/emmikkelsen/node-lectio-til-ics/issues"
+    "url": "https://github.com/soeren-b-c/lectio-skema-til-.ics-kalender/issues"
   },
-  "homepage": "https://github.com/emmikkelsen/node-lectio-til-ics#readme"
+  "homepage": "https://github.com/soeren-b-c/lectio-skema-til-.ics-kalender#readme"
 }
