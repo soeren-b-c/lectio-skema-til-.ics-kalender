@@ -36,10 +36,7 @@ Elev: <http://DIN-IP-ADRESSE-ELLER-DOMÆNENAVN-HER:9002/?skole=SKOLE-ID&elev=ELE
 
 Hvis du gerne vil at programmet henter skemaet fra Lectio gennem [Tor](https://www.torproject.org/) så er det muligt. (Hvis du ikke er sikker på hvad det betyder har du nok ikke brug for det...)
 
-1. Installer tor
-
-Se [Option two: Tor on Ubuntu or Debian](https://www.torproject.org/docs/debian.html.en#ubuntu)
-
+1. Installer tor, se [Option two: Tor on Ubuntu or Debian](https://www.torproject.org/docs/debian.html.en#ubuntu)
 2. I filen `.env` ret til
 ```
 TOR_ENABLED=true
