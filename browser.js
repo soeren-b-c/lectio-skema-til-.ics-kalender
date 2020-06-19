@@ -16,14 +16,12 @@ const LOGIN_URL = `https://www.lectio.dk/lectio/${env.SCHOOL_NUMBER}/login.aspx`
 
 // DOM Selectors
 const BUTTON_SELECTOR = '#m_Content_submitbtn2';
-const PASSWORD_SELECTOR = '#password2';
-const USERNAME_SELECTOR = '#m_Content_username2';
+const PASSWORD_SELECTOR = '#password';
+const USERNAME_SELECTOR = '#username';
 
 // Puppeteer
 const BROWSER_ARGS =
-  env.TOR_ENABLED === 'true'
-    ? [ '--proxy-server=socks5://127.0.0.1:9050' ]
-    : [];
+  env.TOR_ENABLED === 'true' ? ['--proxy-server=socks5://127.0.0.1:9050'] : [];
 
 const BROWSER_WAIT = env.NODE_ENV === 'development' ? 3e3 : 0;
 const IS_HEADLESS = env.NODE_ENV === 'production' ? true : false;
@@ -32,9 +30,10 @@ const TIMEOUT = 12e4; // 120 seconds
 
 const browserLogin = async () => {
   const proxy = await tor.create();
+  let browser, cookies, page;
 
   try {
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       args: [
         ...BROWSER_ARGS,
         '--disable-gpu',
@@ -43,12 +42,11 @@ const browserLogin = async () => {
         '--no-first-run',
         '--no-sandbox',
         '--no-zygote',
-        '--single-process',
       ],
       headless: IS_HEADLESS,
     });
 
-    const page = await browser.newPage();
+    page = await browser.newPage();
     page.setDefaultNavigationTimeout(TIMEOUT);
 
     stdout.write(`Logging in…\n`);
@@ -61,7 +59,7 @@ const browserLogin = async () => {
       page.waitForNavigation(NET_IDLE),
     ]);
 
-    const cookies = await page.cookies();
+    cookies = await page.cookies();
 
     return { browser, cookies, proxy };
   } catch (error) {
@@ -97,3 +95,4 @@ export const fetch = async (url) => {
     stderr.write(`fetch(): ${error}`);
   }
 };
+
