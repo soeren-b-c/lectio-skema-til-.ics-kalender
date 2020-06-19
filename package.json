@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon",
     "start": "NODE_ENV=production node -r reify node-lectio.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NOD_ENV=test node -r reify test.js"
   },
   "author": "Emil Bach Mikkelsen",
   "contributors": [
