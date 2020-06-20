@@ -2,10 +2,10 @@
 
 process.setMaxListeners(128);
 
-import dotenv from 'dotenv';
-import puppeteer from 'puppeteer';
+import dotenv from "dotenv";
+import puppeteer from "puppeteer";
 
-import tor from './tor-proxy';
+import tor from "./tor-proxy";
 
 const { env, stderr, stdout } = process;
 
@@ -15,17 +15,17 @@ dotenv.config();
 const LOGIN_URL = `https://www.lectio.dk/lectio/${env.SCHOOL_NUMBER}/login.aspx`;
 
 // DOM Selectors
-const BUTTON_SELECTOR = '#m_Content_submitbtn2';
-const PASSWORD_SELECTOR = '#password';
-const USERNAME_SELECTOR = '#username';
+const BUTTON_SELECTOR = "#m_Content_submitbtn2";
+const PASSWORD_SELECTOR = "#password";
+const USERNAME_SELECTOR = "#username";
 
 // Puppeteer
 const BROWSER_ARGS =
-  env.TOR_ENABLED === 'true' ? ['--proxy-server=socks5://127.0.0.1:9050'] : [];
+  env.TOR_ENABLED === "true" ? ["--proxy-server=socks5://127.0.0.1:9050"] : [];
 
-const BROWSER_WAIT = env.NODE_ENV === 'development' ? 3e3 : 0;
-const IS_HEADLESS = env.NODE_ENV === 'production' ? true : false;
-const NET_IDLE = { waitUntil: 'networkidle0' };
+const BROWSER_WAIT = env.NODE_ENV === "development" ? 3e3 : 0;
+const IS_HEADLESS = env.NODE_ENV === "production" ? true : false;
+const NET_IDLE = { waitUntil: "networkidle0" };
 const TIMEOUT = 12e4; // 120 seconds
 
 const browserLogin = async () => {
@@ -36,12 +36,12 @@ const browserLogin = async () => {
     browser = await puppeteer.launch({
       args: [
         ...BROWSER_ARGS,
-        '--disable-gpu',
-        '--disable-dev-shm-usage',
-        '--disable-setuid-sandbox',
-        '--no-first-run',
-        '--no-sandbox',
-        '--no-zygote',
+        "--disable-gpu",
+        "--disable-dev-shm-usage",
+        "--disable-setuid-sandbox",
+        "--no-first-run",
+        "--no-sandbox",
+        "--no-zygote",
       ],
       headless: IS_HEADLESS,
     });
@@ -71,6 +71,8 @@ export const fetch = async (url) => {
   try {
     const { browser, cookies, proxy } = await browserLogin();
 
+    console.log(browser, cookies, proxy);
+
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(TIMEOUT);
 
@@ -95,4 +97,3 @@ export const fetch = async (url) => {
     stderr.write(`fetch(): ${error}`);
   }
 };
-
