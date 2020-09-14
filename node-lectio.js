@@ -10,6 +10,8 @@ var httpTools = require('./http-tools');
 
 var browser = require('./browser');
 
+var qs;
+
 var server = http.createServer(function (req, res) {
   if (url.parse(req.url).query != null) {
     qs = httpTools.splitQuery(url.parse(req.url).query);
@@ -56,13 +58,13 @@ var server = http.createServer(function (req, res) {
   }
 });
 
-function lectio (res, amount, type, school, person) {
+function lectio(res, amount, type, school, person) {
   this.res = res;
   this.school = school;
   this.person = person;
   this.amount = amount;
   this.type = type;
-  var greenland = [ 354, 539, 362, 988, 803, 364 ];
+  var greenland = [354, 539, 362, 988, 803, 364];
   if (greenland.indexOf(Number(this.school)) >= 0)
     this.skew = -4; //Change time to Greenland time
   else this.skew = 0;
@@ -80,7 +82,7 @@ function lectio (res, amount, type, school, person) {
   this.lastTime = lectioHelper.dateFormat(now, 0);
 
   this.beginOutput = function () {
-    begin = 'BEGIN:VCALENDAR\r\n';
+    var begin = 'BEGIN:VCALENDAR\r\n';
     begin += 'VERSION:2.0\r\n';
     begin += 'PRODID:-//skema.click//Lectio//DA\r\n';
     begin += 'CALSCALE:GREGORIAN\r\n';
@@ -117,7 +119,7 @@ function lectio (res, amount, type, school, person) {
     }
 
     //check if date on line 0
-    var re = /[0-9]+\/[0-9]+\-[0-9]+ [0-9]+:[0-9]+ til [0-9]+:[0-9]+/g;
+    var re = /[0-9]+\/[0-9]+-[0-9]+ [0-9]+:[0-9]+ til [0-9]+:[0-9]+/g;
     if (!re.test(lines[0])) {
       //Date not yet on line 0, fetch title
       var special = lines[0];
@@ -237,6 +239,7 @@ function lectio (res, amount, type, school, person) {
     else special += ' - ';
     if (String(typeof teacher) == 'undefined') var teacher = '';
     else teacher += ' - ';
+    var add;
     if (descm == 1) add = 'N - ';
     else if (descm == 2) add = 'L - ';
     else if (descm == 3) add = ' - L:N - ';
@@ -255,6 +258,7 @@ function lectio (res, amount, type, school, person) {
     if (summary == '' && String(typeof subject) != '')
       summary += subject;
 
+    var o;
     o = 'BEGIN:VEVENT' + '\r\n';
     o +=
       'UID:' +
@@ -280,8 +284,8 @@ function lectio (res, amount, type, school, person) {
         entities
           .decode(desc)
           .replace(/\n/g, '\\n')
-          .replace(/\,/g, '\\,')
-          .replace(/\;/, '\\;') +
+          .replace(/,/g, '\\,')
+          .replace(/;/, '\\;') +
         '\r\n';
     o += 'END:VEVENT' + '\r\n';
     callback(o);
@@ -314,7 +318,7 @@ function lectio (res, amount, type, school, person) {
     var l = this;
     var promises = [];
 
-    for (x = 0; x < this.amount; x++) {
+    for (var x = 0; x < this.amount; x++) {
       var result;
       var week = lectioHelper.getWeekNumber(d + x * 604800000 + 8.64e7); //Add 1 day
       week = lectioHelper.pad(week);
@@ -333,7 +337,7 @@ function lectio (res, amount, type, school, person) {
       promise
         .then(function (body) {
           var cheerio = require('cheerio');
-          $ = cheerio.load(body);
+          var $ = cheerio.load(body);
           l.els = l.els + $('.s2bgbox')['length'];
           $('.s2bgbox').each(function (i, item) {
             var promise = new Promise(function (resolve, reject) {
@@ -373,15 +377,15 @@ server.loadTimes = 0;
 server.listen(9002);
 server.last = 0;
 
-function runAnalytics () {
+function runAnalytics() {
   var sequence = server.sequence;
   var date = new Date();
   console.log(date);
   console.log(
     'Fetched ' +
-      server.amnt +
-      ' times since last analytics run. Total: ' +
-      sequence,
+    server.amnt +
+    ' times since last analytics run. Total: ' +
+    sequence,
   );
   var pt = (date.getTime() - server.last) / (1000 * server.amnt);
   console.log('Avg time between fetches: ' + pt + 's');
@@ -393,7 +397,7 @@ function runAnalytics () {
   server.loadTimes = 0;
 }
 
-function cron (interval) {
+function cron(interval) {
   runAnalytics();
   setTimeout(function () {
     cron(interval);
