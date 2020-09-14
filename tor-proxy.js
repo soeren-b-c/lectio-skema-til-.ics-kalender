@@ -16,7 +16,7 @@ const create = async () => {
     try {
       await exec('which tor');
 
-      const proxy = await spawn('tor');
+      const proxy = spawn('tor');
 
       stdout.write(`TOR proxy started with PID ${proxy.pid}.\n`);
 
