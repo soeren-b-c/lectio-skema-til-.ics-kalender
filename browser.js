@@ -84,10 +84,8 @@ export const fetch = async (url) => {
     await page.waitForTimeout(BROWSER_WAIT);
     await browser.close();
 
-    if (proxy) {
-      stdout.write(`Stopping proxy…\n`);
-      proxy.kill();
-    }
+    stdout.write(`Stopping proxy…\n`);
+    proxy.kill();
 
     stdout.write(`Task complete.\n`);
     return response;
