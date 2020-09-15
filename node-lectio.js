@@ -7,6 +7,7 @@ var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
 var lectioHelper = require('./lectio-helper');
 var httpTools = require('./http-tools');
+var cheerio = require('cheerio');
 
 var browser = require('./browser');
 
@@ -336,7 +337,6 @@ function lectio(res, amount, type, school, person) {
 
       promise
         .then(function (body) {
-          var cheerio = require('cheerio');
           var $ = cheerio.load(body);
           l.els = l.els + $('.s2bgbox')['length'];
           $('.s2bgbox').each(function (i, item) {
