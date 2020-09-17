@@ -1,4 +1,4 @@
-.env
+db.csv
 
 .reify-cache
 node_modules/*
