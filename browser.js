@@ -2,17 +2,14 @@
 
 process.setMaxListeners(128);
 
-import dotenv from 'dotenv';
 import puppeteer from 'puppeteer';
 
+import { findUserBySchool } from './db';
 import tor from './tor-proxy';
 
-const { env, stderr, stdout } = process;
+const { env, exit, stderr, stdout } = process;
 
-// See ./.env
-dotenv.config();
-
-const LOGIN_URL = `https://www.lectio.dk/lectio/${env.SCHOOL_NUMBER}/login.aspx`;
+const BASE_URL = `https://www.lectio.dk/lectio`;
 
 // DOM Selectors
 const BUTTON_SELECTOR = '#m_Content_submitbtn2';
@@ -21,16 +18,23 @@ const USERNAME_SELECTOR = '#username';
 
 // Puppeteer
 const BROWSER_ARGS =
-  env.TOR_ENABLED === 'true' ? ['--proxy-server=socks5://127.0.0.1:9050'] : [];
-
+  env.NODE_ENV === 'production'
+    ? ['--proxy-server=socks5://127.0.0.1:9050']
+    : [];
 const BROWSER_WAIT = env.NODE_ENV === 'development' ? 3e3 : 0;
 const IS_HEADLESS = env.NODE_ENV === 'production' ? true : false;
 const NET_IDLE = { waitUntil: 'networkidle0' };
 const TIMEOUT = 12e4; // 120 seconds
 
-const browserLogin = async () => {
-  const proxy = await tor.create();
-  let browser, cookies, page;
+const browserLogin = async (school) => {
+  let browser, cookies, page, user;
+
+  try {
+    user = await findUserBySchool(school);
+  } catch (error) {
+    stderr.write(`No school matching id ${school}\n`);
+    exit(1);
+  }
 
   try {
     browser = await puppeteer.launch({
@@ -50,9 +54,9 @@ const browserLogin = async () => {
     page.setDefaultNavigationTimeout(TIMEOUT);
 
     stdout.write(`Logging in…\n`);
-    await page.goto(`${LOGIN_URL}`, NET_IDLE);
-    await page.type(`${USERNAME_SELECTOR}`, env.USERNAME);
-    await page.type(`${PASSWORD_SELECTOR}`, env.PASSWORD);
+    await page.goto(`${BASE_URL}/${user.school}/login.aspx`, NET_IDLE);
+    await page.type(`${USERNAME_SELECTOR}`, user.name);
+    await page.type(`${PASSWORD_SELECTOR}`, user.pass);
 
     await Promise.all([
       page.click(`${BUTTON_SELECTOR}`),
@@ -61,15 +65,25 @@ const browserLogin = async () => {
 
     cookies = await page.cookies();
 
-    return { browser, cookies, proxy };
+    return { browser, cookies };
   } catch (error) {
     stderr.write(`browserLogin(): ${error}`);
+    exit(1);
   }
 };
 
-export const fetch = async (url) => {
+export const fetch = async (url, school) => {
+  let proxy;
+
   try {
-    const { browser, cookies, proxy } = await browserLogin();
+    proxy = await tor.create();
+  } catch (error) {
+    stderr.write(`fetch() > tor.create(): ${error}`);
+    exit(1);
+  }
+
+  try {
+    const { browser, cookies } = await browserLogin(school);
 
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(TIMEOUT);
@@ -91,6 +105,6 @@ export const fetch = async (url) => {
     return response;
   } catch (error) {
     stderr.write(`fetch(): ${error}`);
+    exit(1);
   }
 };
-
