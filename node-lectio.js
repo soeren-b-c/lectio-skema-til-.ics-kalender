@@ -7,8 +7,11 @@ var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
 var lectioHelper = require('./lectio-helper');
 var httpTools = require('./http-tools');
+var cheerio = require('cheerio');
 
 var browser = require('./browser');
+
+var qs;
 
 var server = http.createServer(function (req, res) {
   if (url.parse(req.url).query != null) {
@@ -16,8 +19,7 @@ var server = http.createServer(function (req, res) {
     if (String(typeof qs.elev) != 'undefined') {
       var type = '0';
       var person = qs.elev;
-    }
-    else if (String(typeof qs.laerer) != 'undefined') {
+    } else if (String(typeof qs.laerer) != 'undefined') {
       var type = '1';
       var person = qs.laerer;
     }
@@ -30,8 +32,7 @@ var server = http.createServer(function (req, res) {
 
     if (String(typeof qs.uger) == 'undefined') {
       var amount = 2;
-    }
-    else {
+    } else {
       var amount = Number(qs.uger);
     }
 
@@ -42,37 +43,34 @@ var server = http.createServer(function (req, res) {
       this.sequence++;
       var lec = new lectio(res, amount, type, school, person);
       lec.generate(res);
-    }
-    else {
+    } else {
       res.writeHead(404, {
         'content-type': 'text/html; charset=utf-8',
       });
       res.end('PAGE NOT FOUND');
     }
-  }
-  else {
+  } else {
     res.writeHead(404, { 'content-type': 'text/html; charset=utf-8' });
     res.end('PAGE NOT FOUND');
   }
 });
 
-function lectio (res, amount, type, school, person) {
+function lectio(res, amount, type, school, person) {
   this.res = res;
   this.school = school;
   this.person = person;
   this.amount = amount;
   this.type = type;
-  var greenland = [ 354, 539, 362, 988, 803, 364 ];
-  if (greenland.indexOf(Number(this.school)) >= 0)
-    this.skew = -4; //Change time to Greenland time
+  var greenland = [354, 539, 362, 988, 803, 364];
+  if (greenland.indexOf(Number(this.school)) >= 0) this.skew = -4;
+  //Change time to Greenland time
   else this.skew = 0;
   var now = new Date();
   this.startTime = now.getTime();
   this.nowTime = lectioHelper.dateFormat(now, 0);
   if (Math.floor(now.getMinutes() / 15) == 0) {
     var min = '00';
-  }
-  else {
+  } else {
     var min = Math.floor(now.getMinutes() / 15) * 15;
   }
   now.setUTCMinutes(min);
@@ -80,7 +78,7 @@ function lectio (res, amount, type, school, person) {
   this.lastTime = lectioHelper.dateFormat(now, 0);
 
   this.beginOutput = function () {
-    begin = 'BEGIN:VCALENDAR\r\n';
+    var begin = 'BEGIN:VCALENDAR\r\n';
     begin += 'VERSION:2.0\r\n';
     begin += 'PRODID:-//skema.click//Lectio//DA\r\n';
     begin += 'CALSCALE:GREGORIAN\r\n';
@@ -109,15 +107,14 @@ function lectio (res, amount, type, school, person) {
     if (lines[0] == 'Aflyst!') {
       lines.splice(0, 1);
       var cancelled = true;
-    }
-    else if (lines[0] == 'Ændret!') {
+    } else if (lines[0] == 'Ændret!') {
       //&#198;ndret
       lines.splice(0, 1);
       var changed = true;
     }
 
     //check if date on line 0
-    var re = /[0-9]+\/[0-9]+\-[0-9]+ [0-9]+:[0-9]+ til [0-9]+:[0-9]+/g;
+    var re = /[0-9]+\/[0-9]+-[0-9]+ [0-9]+:[0-9]+ til [0-9]+:[0-9]+/g;
     if (!re.test(lines[0])) {
       //Date not yet on line 0, fetch title
       var special = lines[0];
@@ -147,30 +144,25 @@ function lectio (res, amount, type, school, person) {
         var line = lines[0].split(': ');
         var regExp = /\(([^)]+)\)/;
         var teacher = regExp.exec(line[1])[1];
-      }
-      else if (lines[0].substr(0, 7) == 'Lærere:') {
+      } else if (lines[0].substr(0, 7) == 'Lærere:') {
         var line = lines[0].split(': ');
         var teacher = line[1].split(',').join('');
-      }
-      else if (lines[0].substr(0, 5) == 'Hold:') {
+      } else if (lines[0].substr(0, 5) == 'Hold:') {
         /* SUBJECT */
         var line = lines[0].split(': ');
         var subject = line[1];
-      }
-      else if (lines[0].substr(0, 7) == 'Lokale:') {
+      } else if (lines[0].substr(0, 7) == 'Lokale:') {
         /* LOCATION */
         var line = lines[0].split(': ');
         var location = line[1];
         if (location.charCodeAt(location.length - 1) == '13')
           location = location.substr(0, location.length - 1);
-      }
-      else if (lines[0].substr(0, 8) == 'Lokaler:') {
+      } else if (lines[0].substr(0, 8) == 'Lokaler:') {
         var line = lines[0].split(': ');
         var location = line[1].split(',').join('');
         if (location.charCodeAt(location.length - 1) == '13')
           location = location.substr(0, location.length - 1);
-      }
-      else if (
+      } else if (
         lines[0].substr(0, 5) == 'Elev:' ||
         lines[0].substr(0, 7) == 'Elever:' ||
         lines[0].substr(0, 9) == 'Resource:' ||
@@ -178,8 +170,7 @@ function lectio (res, amount, type, school, person) {
         lines[0].substr(0, 11) == 'Ressourcer:'
       ) {
         //Unimportant
-      }
-      else {
+      } else {
         /* SPECIAL EVENT */
         var special = lines[0];
         if (String(typeof special) != 'undefined') {
@@ -225,11 +216,9 @@ function lectio (res, amount, type, school, person) {
     no = lectioHelper.removePadding(no);
     if (hw != '' && no != '') {
       var desc = no + '\n\n\n\n' + hw;
-    }
-    else if (no != '') {
+    } else if (no != '') {
       var desc = no;
-    }
-    else if (hw != '') {
+    } else if (hw != '') {
       var desc = hw;
     }
 
@@ -237,6 +226,7 @@ function lectio (res, amount, type, school, person) {
     else special += ' - ';
     if (String(typeof teacher) == 'undefined') var teacher = '';
     else teacher += ' - ';
+    var add;
     if (descm == 1) add = 'N - ';
     else if (descm == 2) add = 'L - ';
     else if (descm == 3) add = ' - L:N - ';
@@ -245,16 +235,15 @@ function lectio (res, amount, type, school, person) {
       if (subject.charCodeAt(subject.length - 1) == '13')
         subject = subject.substr(0, subject.length - 1);
       subject = subject + ' - ';
-    }
-    else {
+    } else {
       var subject = '';
     }
 
     var summary = special + subject + teacher + add;
     summary = summary.substr(0, summary.length - 3);
-    if (summary == '' && String(typeof subject) != '')
-      summary += subject;
+    if (summary == '' && String(typeof subject) != '') summary += subject;
 
+    var o;
     o = 'BEGIN:VEVENT' + '\r\n';
     o +=
       'UID:' +
@@ -268,8 +257,7 @@ function lectio (res, amount, type, school, person) {
     if (cancelled === true) o += 'STATUS:CANCELLED' + '\r\n';
     o += 'DTSTAMP:' + this.nowTime + '\r\n';
     o += 'LAST-MODIFIED:' + this.lastTime + '\r\n';
-    o +=
-      'DTSTART:' + lectioHelper.dateFormat(start, this.skew) + '\r\n';
+    o += 'DTSTART:' + lectioHelper.dateFormat(start, this.skew) + '\r\n';
     o += 'DTEND:' + lectioHelper.dateFormat(end, this.skew) + '\r\n';
     o += 'SUMMARY:' + entities.decode(summary) + '\r\n';
     if (String(typeof location) != 'undefined')
@@ -280,8 +268,8 @@ function lectio (res, amount, type, school, person) {
         entities
           .decode(desc)
           .replace(/\n/g, '\\n')
-          .replace(/\,/g, '\\,')
-          .replace(/\;/, '\\;') +
+          .replace(/,/g, '\\,')
+          .replace(/;/, '\\;') +
         '\r\n';
     o += 'END:VEVENT' + '\r\n';
     callback(o);
@@ -297,8 +285,7 @@ function lectio (res, amount, type, school, person) {
         '/SkemaNy.aspx?type=elev&elevid=' +
         this.person +
         '&week=';
-    }
-    else {
+    } else {
       var base =
         'https://www.lectio.dk/lectio/' +
         this.school +
@@ -314,35 +301,32 @@ function lectio (res, amount, type, school, person) {
     var l = this;
     var promises = [];
 
-    for (x = 0; x < this.amount; x++) {
+    for (var x = 0; x < this.amount; x++) {
       var result;
       var week = lectioHelper.getWeekNumber(d + x * 604800000 + 8.64e7); //Add 1 day
       week = lectioHelper.pad(week);
 
       if (week >= w) {
         result = week + String(y);
-      }
-      else {
+      } else {
         result = week + String(y + 1);
       }
 
       var url = base + result;
 
-      var promise = browser.fetch(url);
+      var promise = browser.fetch(url, this.school);
 
       promise
         .then(function (body) {
-          var cheerio = require('cheerio');
-          $ = cheerio.load(body);
+          var $ = cheerio.load(body);
           l.els = l.els + $('.s2bgbox')['length'];
           $('.s2bgbox').each(function (i, item) {
             var promise = new Promise(function (resolve, reject) {
-              l.processEvent(
-                item.attribs['data-additionalinfo'],
-                function (output) {
-                  resolve(output);
-                },
-              );
+              l.processEvent(item.attribs['data-additionalinfo'], function (
+                output,
+              ) {
+                resolve(output);
+              });
             });
             promise.then(function (output) {
               l.res.write(output);
@@ -373,27 +357,22 @@ server.loadTimes = 0;
 server.listen(9002);
 server.last = 0;
 
-function runAnalytics () {
+function runAnalytics() {
   var sequence = server.sequence;
   var date = new Date();
   console.log(date);
   console.log(
-    'Fetched ' +
-      server.amnt +
-      ' times since last analytics run. Total: ' +
-      sequence,
+    `Fetched ${server.amnt} times since last analytics run. Total: ${sequence}`,
   );
   var pt = (date.getTime() - server.last) / (1000 * server.amnt);
   console.log('Avg time between fetches: ' + pt + 's');
-  console.log(
-    'Average load time: ' + server.loadTimes / server.amnt + 'ms\n',
-  );
+  console.log('Average load time: ' + server.loadTimes / server.amnt + 'ms\n');
   server.last = date.getTime();
   server.amnt = 0;
   server.loadTimes = 0;
 }
 
-function cron (interval) {
+function cron(interval) {
   runAnalytics();
   setTimeout(function () {
     cron(interval);
