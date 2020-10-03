@@ -1,5 +1,6 @@
 # Historisk
 
+ * Efterår 2020: Mulighed for at have login til flere forskellige skoler i konfigurations-filen tilføjes.
  * Sommer 2019: Programmet kører i "production" på skema.click.
  * marts 2019: Login-mulighed tilføjes til koden, så programmet fungerer igen.
  * Januar 2019 bliver alle skemaer (der tidligere lå frit tilgængeligt) placeret bag login, for at Lectio kan leve op til den nye GDPR lovgivning. Koden virker således ikke længere.
