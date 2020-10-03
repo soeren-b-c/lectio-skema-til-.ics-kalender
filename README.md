@@ -5,11 +5,14 @@ Node http server der konverterer fra lectioskemaer til .ics formatet.
 Spørgsmål, kommentarer, pull requests osv. meget velkomne!
 
 
-
 ## Installationsguide
 
 Det antages at der installeres på en Ubuntu / Linux-lignende platform.
 
+0. Installer nødvendige pakker
+   ```
+   sudo apt install wget tor
+   ```
 1. Installer Node.js. Hent nyeste udgave fra <https://nodejs.org/en/download/>
 2. Hent filerne, pak ud, naviger til den udpakkede mappe
    ```
