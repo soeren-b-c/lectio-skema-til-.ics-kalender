@@ -13,26 +13,26 @@ Det antages at der installeres på en Ubuntu / Linux-lignende platform.
 1. Installer Node.js. Hent nyeste udgave fra <https://nodejs.org/en/download/>
 2. Hent filerne, pak ud, naviger til den udpakkede mappe
 ```
-wget https://github.com/soeren-b-c/node-lectio-til-ics/archive/master.zip
-unzip master.zip
-cd node-lectio-til-ics-master
+   wget https://github.com/soeren-b-c/node-lectio-til-ics/archive/master.zip
+   unzip master.zip
+   cd node-lectio-til-ics-master
 ```
 3. Installer nødvendige pakker
 ```
-npm install
-npm audit fix
+   npm install
+   npm audit fix
 ```
 4. Find dit SKOLE-ID og LÆRER-ID / ELEV-ID  i adressefeltet i dit personlige Lectio-skema.
 Eksempel lærer: https://www.lectio.dk/lectio/SKOLE-ID/SkemaNy.aspx?type=laerer&laererid=LÆRER-ID
 Eksempel elev: https://www.lectio.dk/lectio/SKOLE-ID/SkemaNy.aspx?type=elev&elevid=ELEV-ID
-5. Kopier filen `sample.env` til `.env`
+5. Kopier filen `sample-db.csv` til `db.csv`
 ```
-cp sample.env .env
+   cp sample-db.csv db.csv
 ```
-6. Rediger filen `.env`, og tilret med dit SKOLE-ID, og angiv dit brugernavn og kodeord.
+6. Rediger filen `db.csv`, og tilret med dit SKOLE-ID, og angiv dit brugernavn og kodeord. F.eks. `1,AA,hunter1`, hvis du går på skole 1, med brugernavn AA og kodeord hunter1.
 7. Start programmet
 ```
-npm start
+   npm start
 ```
 8. Besøg web-adressen <http://localhost:9002/?laerer=LÆRER-ID&uger=2&type=laerer&skole=SKOLE-ID> hvis du er lærer, eller <http://localhost:9002/?skole=SKOLE-ID&elev=ELEV-ID> hvis du er elev, og erstatter SKOLE-ID og LÆRER-ID / ELEV-ID med dine egne værdier.
 Du får nu genereret en .ics kalender-fil med dit skema.
@@ -40,8 +40,8 @@ Du får nu genereret en .ics kalender-fil med dit skema.
 Det er du (med tanke på [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation)) nok ikke interesseret i. Der er en grund til at Lectio skjuler skemaerne bag et login.
 Det er **måske en god ide at begrænse adgang udefra**. Brug f.eks. *ufw* til det.
 ```
-man ufw
-sudo ufw deny 9002
+   man ufw
+   sudo ufw deny 9002
 ```
 
 Se [setup.md](docs/setup.md) for forslag til setup og daglig brug.
