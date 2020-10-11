@@ -7,6 +7,8 @@ import puppeteer from 'puppeteer';
 import { findUserBySchool } from './db';
 import tor from './tor-proxy';
 
+var dato = new Date();
+
 const { env, exit, stderr, stdout } = process;
 
 const BASE_URL = `https://www.lectio.dk/lectio`;
@@ -53,7 +55,7 @@ const browserLogin = async (school) => {
     page = await browser.newPage();
     page.setDefaultNavigationTimeout(TIMEOUT);
 
-    stdout.write(`Logging in…\n`);
+    stdout.write(dato.toUTCString() + `: Logging in...\n`);
     await page.goto(`${BASE_URL}/${user.school}/login.aspx`, NET_IDLE);
     await page.type(`${USERNAME_SELECTOR}`, user.name);
     await page.type(`${PASSWORD_SELECTOR}`, user.pass);
@@ -88,17 +90,17 @@ export const fetch = async (url, school) => {
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(TIMEOUT);
 
-    stdout.write(`Fetching ${url}\n`);
+    stdout.write(dato.toUTCString() + ` Fetching ${url}\n`);
     await page.setCookie(...cookies);
     await page.goto(url, NET_IDLE);
 
     const response = await page.content();
 
-    stdout.write(`Stopping browser…\n`);
+    stdout.write(dato.toUTCString() + ` Stopping browser...\n`);
     await page.waitForTimeout(BROWSER_WAIT);
     await browser.close();
 
-    stdout.write(`Stopping proxy…\n`);
+    stdout.write(dato.toUTCString() + ` Stopping proxy...\n`);
     proxy.kill();
 
     stdout.write(`Task complete.\n`);
