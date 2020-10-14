@@ -34,7 +34,7 @@ const browserLogin = async (school) => {
   try {
     user = await findUserBySchool(school);
   } catch (error) {
-    stderr.write(`No school matching id ${school}\n`);
+    stderr.write(dato.toUTCString() + ` No school matching id ${school}\n`);
     exit(1);
   }
 
@@ -69,7 +69,7 @@ const browserLogin = async (school) => {
 
     return { browser, cookies };
   } catch (error) {
-    stderr.write(`browserLogin(): ${error}`);
+    stderr.write(dato.toUTCString() + ` browserLogin(): ${error}`);
     exit(1);
   }
 };
@@ -80,7 +80,7 @@ export const fetch = async (url, school) => {
   try {
     proxy = await tor.create();
   } catch (error) {
-    stderr.write(`fetch() > tor.create(): ${error}`);
+    stderr.write(dato.toUTCString() + ` fetch() > tor.create(): ${error}`);
     exit(1);
   }
 
@@ -103,10 +103,10 @@ export const fetch = async (url, school) => {
     stdout.write(dato.toUTCString() + ` Stopping proxy...\n`);
     proxy.kill();
 
-    stdout.write(`Task complete.\n`);
+    stdout.write(dato.toUTCString() + ` Task complete.\n`);
     return response;
   } catch (error) {
-    stderr.write(`fetch(): ${error}`);
+    stderr.write(dato.toUTCString() + ` fetch(): ${error}`);
     exit(1);
   }
 };
