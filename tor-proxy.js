@@ -17,7 +17,7 @@ const create = async () => {
 
     const proxy = spawn('tor');
 
-    stdout.write(`TOR proxy started with PID ${proxy.pid}.\n`);
+    stdout.write(new Date().toUTCString() + `TOR proxy started with PID ${proxy.pid}.\n`);
 
     return proxy;
   } catch (error) {

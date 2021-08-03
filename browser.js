@@ -7,8 +7,6 @@ import puppeteer from 'puppeteer';
 import { findUserBySchool } from './db';
 import tor from './tor-proxy';
 
-var dato = new Date();
-
 const { env, exit, stderr, stdout } = process;
 
 const BASE_URL = `https://www.lectio.dk/lectio`;
@@ -34,7 +32,7 @@ const browserLogin = async (school) => {
   try {
     user = await findUserBySchool(school);
   } catch (error) {
-    stderr.write(dato.toUTCString() + ` No school matching id ${school}\n`);
+    stderr.write(new Date().toUTCString() + ` No school matching id ${school}\n`);
     exit(1);
   }
 
@@ -55,7 +53,7 @@ const browserLogin = async (school) => {
     page = await browser.newPage();
     page.setDefaultNavigationTimeout(TIMEOUT);
 
-    stdout.write(dato.toUTCString() + `: Logging in...\n`);
+    stdout.write(new Date().toUTCString() + `: Logging in...\n`);
     await page.goto(`${BASE_URL}/${user.school}/login.aspx`, NET_IDLE);
     await page.type(`${USERNAME_SELECTOR}`, user.name);
     await page.type(`${PASSWORD_SELECTOR}`, user.pass);
@@ -69,7 +67,7 @@ const browserLogin = async (school) => {
 
     return { browser, cookies };
   } catch (error) {
-    stderr.write(dato.toUTCString() + ` browserLogin(): ${error}`);
+    stderr.write(new Date().toUTCString() + ` browserLogin(): ${error}`);
     exit(1);
   }
 };
@@ -80,7 +78,7 @@ export const fetch = async (url, school) => {
   try {
     proxy = await tor.create();
   } catch (error) {
-    stderr.write(dato.toUTCString() + ` fetch() > tor.create(): ${error}`);
+    stderr.write(new Date().toUTCString() + ` fetch() > tor.create(): ${error}`);
     exit(1);
   }
 
@@ -90,23 +88,23 @@ export const fetch = async (url, school) => {
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(TIMEOUT);
 
-    stdout.write(dato.toUTCString() + ` Fetching ${url}\n`);
+    stdout.write(new Date().toUTCString() + ` Fetching ${url}\n`);
     await page.setCookie(...cookies);
     await page.goto(url, NET_IDLE);
 
     const response = await page.content();
 
-    stdout.write(dato.toUTCString() + ` Stopping browser...\n`);
+    stdout.write(new Date().toUTCString() + ` Stopping browser...\n`);
     await page.waitForTimeout(BROWSER_WAIT);
     await browser.close();
 
-    stdout.write(dato.toUTCString() + ` Stopping proxy...\n`);
+    stdout.write(new Date().toUTCString() + ` Stopping proxy...\n`);
     proxy.kill();
 
-    stdout.write(dato.toUTCString() + ` Task complete.\n`);
+    stdout.write(new Date().toUTCString() + ` Task complete.\n`);
     return response;
   } catch (error) {
-    stderr.write(dato.toUTCString() + ` fetch(): ${error}`);
+    stderr.write(new Date().toUTCString() + ` fetch(): ${error}`);
     exit(1);
   }
 };
