@@ -9,14 +9,14 @@ import retry from './retry';
 const { exit, stderr, stdout } = process;
 
 (async () => {
-/*   try {
+  try {
     const page = await browser.fetch(`${URL}`, `${SCHOOL}`);
     stdout.write(page);
     exit(0);
   } catch (error) {
     stderr.write(error.message);
     exit(1);
-  } */
+  }
 
   const expectedResult = 'yay'
   const fnSuccess = () => expectedResult;
