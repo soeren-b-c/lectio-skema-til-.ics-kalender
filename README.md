@@ -55,7 +55,7 @@ Programmet er oprindeligt skrevet af Emil Bach Mikkelsen og udgivet under ISC li
 
 Emils oprindelige kode kan findes her: [https://github.com/emmikkelsen/node-lectio-til-ics](https://github.com/emmikkelsen/node-lectio-til-ics)
 
-Yderligere bidrag af Scott Mathieson.
+Yderligere bidrag af Scott Mathieson og Leonora.
 
 Programmet kan hentes her: [https://github.com/soeren-b-c/node-lectio-til-ics/](https://github.com/soeren-b-c/node-lectio-til-ics/)
   
