@@ -6,6 +6,7 @@ import puppeteer from 'puppeteer';
 
 import { findUserBySchool } from './db';
 import tor from './tor-proxy';
+import retry from './retry';
 
 const { env, exit, stderr, stdout } = process;
 
@@ -37,35 +38,37 @@ const browserLogin = async (school) => {
   }
 
   try {
-    browser = await puppeteer.launch({
-      args: [
-        ...BROWSER_ARGS,
-        '--disable-gpu',
-        '--disable-dev-shm-usage',
-        '--disable-setuid-sandbox',
-        '--no-first-run',
-        '--no-sandbox',
-        '--no-zygote',
-      ],
-      headless: IS_HEADLESS,
-    });
+    return retry(async () => {
+      browser = await puppeteer.launch({
+        args: [
+          ...BROWSER_ARGS,
+          '--disable-gpu',
+          '--disable-dev-shm-usage',
+          '--disable-setuid-sandbox',
+          '--no-first-run',
+          '--no-sandbox',
+          '--no-zygote',
+        ],
+        headless: IS_HEADLESS,
+      });
 
-    page = await browser.newPage();
-    page.setDefaultNavigationTimeout(TIMEOUT);
+      page = await browser.newPage();
+      page.setDefaultNavigationTimeout(TIMEOUT);
 
-    stdout.write(new Date().toUTCString() + `: Logging in...\n`);
-    await page.goto(`${BASE_URL}/${user.school}/login.aspx`, NET_IDLE);
-    await page.type(`${USERNAME_SELECTOR}`, user.name);
-    await page.type(`${PASSWORD_SELECTOR}`, user.pass);
+      stdout.write(new Date().toUTCString() + `: Logging in...\n`);
+      await page.goto(`${BASE_URL}/${user.school}/login.aspx`, NET_IDLE);
+      await page.type(`${USERNAME_SELECTOR}`, user.name);
+      await page.type(`${PASSWORD_SELECTOR}`, user.pass);
 
-    await Promise.all([
-      page.click(`${BUTTON_SELECTOR}`),
-      page.waitForNavigation(NET_IDLE),
-    ]);
+      await Promise.all([
+        page.click(`${BUTTON_SELECTOR}`),
+        page.waitForNavigation(NET_IDLE),
+      ]);
 
-    cookies = await page.cookies();
+      cookies = await page.cookies();
 
-    return { browser, cookies };
+      return { browser, cookies };
+    }, { onError: (error) => stderr.write(new Date().toUTCString() + ` browserLogin(): ${error}`) });
   } catch (error) {
     stderr.write(new Date().toUTCString() + ` browserLogin(): ${error}`);
     exit(1);
@@ -76,33 +79,35 @@ export const fetch = async (url, school) => {
   let proxy;
 
   try {
-    proxy = await tor.create();
+    proxy = await retry(tor.create, { onError: error => stderr.write(new Date().toUTCString() + ` fetch() > tor.create(): ${error}`) });
   } catch (error) {
     stderr.write(new Date().toUTCString() + ` fetch() > tor.create(): ${error}`);
     exit(1);
   }
 
   try {
-    const { browser, cookies } = await browserLogin(school);
+    return await retry(async () => {
+      const { browser, cookies } = await browserLogin(school);
 
-    const page = await browser.newPage();
-    page.setDefaultNavigationTimeout(TIMEOUT);
+      const page = await browser.newPage();
+      page.setDefaultNavigationTimeout(TIMEOUT);
 
-    stdout.write(new Date().toUTCString() + ` Fetching ${url}\n`);
-    await page.setCookie(...cookies);
-    await page.goto(url, NET_IDLE);
+      stdout.write(new Date().toUTCString() + ` Fetching ${url}\n`);
+      await page.setCookie(...cookies);
+      await page.goto(url, NET_IDLE);
 
-    const response = await page.content();
+      const response = await page.content();
 
-    stdout.write(new Date().toUTCString() + ` Stopping browser...\n`);
-    await page.waitForTimeout(BROWSER_WAIT);
-    await browser.close();
+      stdout.write(new Date().toUTCString() + ` Stopping browser...\n`);
+      await page.waitForTimeout(BROWSER_WAIT);
+      await browser.close();
 
-    stdout.write(new Date().toUTCString() + ` Stopping proxy...\n`);
-    proxy.kill();
+      stdout.write(new Date().toUTCString() + ` Stopping proxy...\n`);
+      proxy.kill();
 
-    stdout.write(new Date().toUTCString() + ` Task complete.\n`);
-    return response;
+      stdout.write(new Date().toUTCString() + ` Task complete.\n`);
+      return response;
+    }, { onError: err => stderr.write(new Date().toUTCString() + ` fetch(): ${error}`) });
   } catch (error) {
     stderr.write(new Date().toUTCString() + ` fetch(): ${error}`);
     exit(1);
