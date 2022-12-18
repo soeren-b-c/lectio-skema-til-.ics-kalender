@@ -33,7 +33,8 @@ Eksempel elev: https://www.lectio.dk/lectio/SKOLE-ID/SkemaNy.aspx?type=elev&elev
    cp sample-db.csv db.csv
    ```
 6. Rediger filen `db.csv`, og tilret med dit SKOLE-ID, og angiv dit brugernavn og kodeord. F.eks. `1,AA,hunter1`, hvis du går på skole 1, med brugernavn AA og kodeord hunter1.
-7. Start programmet
+7. (Hvis _og kun hvis_ du kører koden på en Raspberry Pi eller lignende, så fjern kommenteringen på linje 57 i browser.js filen https://github.com/soeren-b-c/lectio-skema-til-.ics-kalender/blob/340eba9f381732c9cc87dbbc61ce854eafdffde2/browser.js#L53-L57 og installer chromium `sudo apt install chromium-browser`.)
+9. Start programmet
    ```
    npm start
    ```
