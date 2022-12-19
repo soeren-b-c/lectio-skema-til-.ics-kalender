@@ -50,6 +50,11 @@ const browserLogin = async (school) => {
           '--no-zygote',
         ],
         headless: IS_HEADLESS,
+        // If on Raspberry Pi, uncomment line below after 
+        // installing chromium via apt (or similar)
+        // See https://github.com/puppeteer/puppeteer/issues/7917
+        // and https://github.com/soeren-b-c/lectio-skema-til-.ics-kalender/issues/24
+        //executablePath: '/usr/bin/chromium-browser',
       });
 
       page = await browser.newPage();
