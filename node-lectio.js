@@ -320,17 +320,25 @@ function lectio(res, amount, type, school, person) {
         .then(function (body) {
           var $ = cheerio.load(body);
           l.els = l.els + $('.s2bgbox')['length'];
-          $('.s2bgbox').each(function (i, item) {
-            var promise = new Promise(function (resolve, reject) {
-              l.processEvent(item.attribs['data-additionalinfo'], function (
-                output,
-              ) {
-                resolve(output);
-              });
-            });
-            promise.then(function (output) {
-              l.res.write(output);
-            });
+          var absids = [];
+          $('.s2bgbox').each(function(i, item) {
+              var regExp = '/absid=(\\d+)/'; // Create regex
+              var absid = regExp.exec(item.attribs['href'])[1].split('=')[1]; // Find absid
+              if (!absids.includes(absid)) { // Check absid
+                  absids.push(absid); // Add absid
+
+                  var promise = new Promise(function(resolve, reject) {
+                      l.processEvent(
+                          item.attribs['data-additionalinfo'],
+                          function(output) {
+                              resolve(output);
+                          },
+                      );
+                  });
+                  promise.then(function(output) {
+                      l.res.write(output);
+                  });
+              }
           });
         })
         .catch(function (error) {
