@@ -321,10 +321,9 @@ function lectio(res, amount, type, school, person) {
           var $ = cheerio.load(body);
           l.els = l.els + $('.s2bgbox')['length'];
           $('.s2bgbox').each(function (i, item) {
+            var dataTooltip = item.attribs['data-tooltip'];
             var promise = new Promise(function (resolve, reject) {
-              l.processEvent(item.attribs['data-additionalinfo'], function (
-                output,
-              ) {
+              l.processEvent(dataTooltip, function (output) {
                 resolve(output);
               });
             });
