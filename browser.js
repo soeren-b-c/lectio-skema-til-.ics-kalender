@@ -61,7 +61,7 @@ const browserLogin = async (school) => {
       page.setDefaultNavigationTimeout(TIMEOUT);
 
       stdout.write(new Date().toUTCString() + `: Logging in...\n`);
-      await page.goto(`${BASE_URL}/${user.school}/login.aspx`, NET_IDLE);
+      await page.goto(`${BASE_URL}/${user.school}/login.aspx?type=brugernavn`, NET_IDLE);
       await page.type(`${USERNAME_SELECTOR}`, user.name);
       await page.type(`${PASSWORD_SELECTOR}`, user.pass);
 
