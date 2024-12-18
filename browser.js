@@ -50,11 +50,7 @@ const browserLogin = async (school) => {
           '--no-zygote',
         ],
         headless: IS_HEADLESS,
-        // If on Raspberry Pi, uncomment line below after 
-        // installing chromium via apt (or similar)
-        // See https://github.com/puppeteer/puppeteer/issues/7917
-        // and https://github.com/soeren-b-c/lectio-skema-til-.ics-kalender/issues/24
-        //executablePath: '/usr/bin/chromium-browser',
+        executablePath: '/usr/bin/chromium-browser',
       });
 
       page = await browser.newPage();
@@ -112,9 +108,9 @@ export const fetch = async (url, school) => {
 
       stdout.write(new Date().toUTCString() + ` Task complete.\n`);
       return response;
-    }, { onError: err => stderr.write(new Date().toUTCString() + ` fetch(): ${error}`) });
+    }, { onError: err => stderr.write(new Date().toUTCString() + `fetch(): ${error}`) });
   } catch (error) {
-    stderr.write(new Date().toUTCString() + ` fetch(): ${error}`);
+    stderr.write(new Date().toUTCString() + `fetch(): ${error}`);
     exit(1);
   }
 };
