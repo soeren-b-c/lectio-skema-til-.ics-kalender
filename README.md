@@ -4,6 +4,9 @@ Node http server der konverterer fra lectioskemaer til .ics formatet.
 
 Spørgsmål, kommentarer, pull requests osv. meget velkomne!
 
+## I øjeblikket ikke fungerende :(
+
+Se [Bug 32](https://github.com/soeren-b-c/lectio-skema-til-.ics-kalender/issues/32)
 
 ## Installationsguide
 
